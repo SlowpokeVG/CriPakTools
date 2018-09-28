@@ -33,10 +33,13 @@ namespace CriPakTools
             if (args.Length == 1)
             {
                 List<FileEntry> entries = cpk.FileTable.OrderBy(x => x.FileOffset).ToList();
+
+               
                 for (int i = 0; i < entries.Count; i++)
                 {
                     Console.WriteLine(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName);
                 }
+                Console.ReadLine();
             }
             else if (args.Length == 2)
             {
@@ -49,29 +52,32 @@ namespace CriPakTools
                 if (entries.Count == 0)
                 {
                     Console.WriteLine("Cannot find " + extractMe + ".");
+                    Console.ReadKey();
                 }
 
                 for (int i = 0; i < entries.Count; i++)
                 {
+                    //Console.WriteLine(i.ToString());
                     if (!String.IsNullOrEmpty((string)entries[i].DirName))
                     {
                         Directory.CreateDirectory(entries[i].DirName.ToString());
                     }
-
                     oldFile.BaseStream.Seek((long)entries[i].FileOffset, SeekOrigin.Begin);
                     string isComp = Encoding.ASCII.GetString(oldFile.ReadBytes(8));
                     oldFile.BaseStream.Seek((long)entries[i].FileOffset, SeekOrigin.Begin);
+                    //Console.WriteLine(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString() + " " + entries[i].FileSize.ToString() + " " + entries[i].ExtractSize.ToString());
 
                     byte[] chunk = oldFile.ReadBytes(Int32.Parse(entries[i].FileSize.ToString()));
                     if (isComp == "CRILAYLA")
                     {
-                        int size = Int32.Parse((entries[i].ExtractSize ?? entries[i].FileSize).ToString());
-                        chunk = cpk.DecompressCRILAYLA(chunk, size);
+                        if (Int32.Parse((entries[i].ExtractSize).ToString()) > 0)
+                        chunk = cpk.DecompressCRILAYLA(chunk);
                     }
 
                     Console.WriteLine("Extracting: " + ((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString());
                     File.WriteAllBytes(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString(), chunk);
                 }
+                Console.ReadKey();
             }
             else
             {
