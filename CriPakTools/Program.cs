@@ -39,7 +39,6 @@ namespace CriPakTools
                 {
                     Console.WriteLine(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName);
                 }
-                Console.ReadLine();
             }
             else if (args.Length == 2)
             {
@@ -52,7 +51,6 @@ namespace CriPakTools
                 if (entries.Count == 0)
                 {
                     Console.WriteLine("Cannot find " + extractMe + ".");
-                    Console.ReadKey();
                 }
 
                 for (int i = 0; i < entries.Count; i++)
@@ -77,6 +75,7 @@ namespace CriPakTools
                     Console.WriteLine("Extracting: " + ((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString());
                     File.WriteAllBytes(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString(), chunk);
                 }
+                Console.WriteLine("All Done. Press Any Key.");
                 Console.ReadKey();
             }
             else
