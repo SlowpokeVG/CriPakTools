@@ -75,8 +75,6 @@ namespace CriPakTools
                     Console.WriteLine("Extracting: " + ((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString());
                     File.WriteAllBytes(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString(), chunk);
                 }
-                Console.WriteLine("All Done. Press Any Key.");
-                Console.ReadKey();
             }
             else
             {
