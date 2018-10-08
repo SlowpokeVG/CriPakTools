@@ -58,7 +58,7 @@ namespace CriPakTools
                 {
                     if (!String.IsNullOrEmpty((string)entries[i].DirName))
                     {
-                        Directory.CreateDirectory(outDir + entries[i].DirName.ToString());
+                        Directory.CreateDirectory(entries[i].DirName.ToString());
                     }
                     oldFile.BaseStream.Seek((long)entries[i].FileOffset, SeekOrigin.Begin);
                     string isComp = Encoding.ASCII.GetString(oldFile.ReadBytes(8));
