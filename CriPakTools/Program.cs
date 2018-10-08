@@ -42,6 +42,7 @@ namespace CriPakTools
             }
             else if (args.Length == 2)
             {
+                string outDir = ".";
                 string extractMe = args[1];
 
                 List<FileEntry> entries = null;
@@ -55,15 +56,13 @@ namespace CriPakTools
 
                 for (int i = 0; i < entries.Count; i++)
                 {
-                    //Console.WriteLine(i.ToString());
                     if (!String.IsNullOrEmpty((string)entries[i].DirName))
                     {
-                        Directory.CreateDirectory(entries[i].DirName.ToString());
+                        Directory.CreateDirectory(outDir + entries[i].DirName.ToString());
                     }
                     oldFile.BaseStream.Seek((long)entries[i].FileOffset, SeekOrigin.Begin);
                     string isComp = Encoding.ASCII.GetString(oldFile.ReadBytes(8));
                     oldFile.BaseStream.Seek((long)entries[i].FileOffset, SeekOrigin.Begin);
-                    //Console.WriteLine(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString() + " " + entries[i].FileSize.ToString() + " " + entries[i].ExtractSize.ToString());
 
                     byte[] chunk = oldFile.ReadBytes(Int32.Parse(entries[i].FileSize.ToString()));
                     if (isComp == "CRILAYLA")
@@ -73,7 +72,15 @@ namespace CriPakTools
                     }
 
                     Console.WriteLine("Extracting: " + ((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString());
-                    File.WriteAllBytes(((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString(), chunk);
+                    string dstpath = outDir + "/" + ((entries[i].DirName != null) ? entries[i].DirName + "/" : "") + entries[i].FileName.ToString();
+
+                    string dstdir = Path.GetDirectoryName(dstpath);
+                    if (!Directory.Exists(dstdir))
+                    {
+                        Directory.CreateDirectory(dstdir);
+                    }
+                    File.WriteAllBytes(dstpath, chunk);
+
                 }
             }
             else
